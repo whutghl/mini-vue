@@ -1,4 +1,4 @@
-import observe from './observe';
+import { observe } from "./observe";
 
 export default function (Vue) {
   // 将$data 代理到 this._data 上来
