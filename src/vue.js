@@ -1,3 +1,6 @@
+import { toArray } from "./util";
+import state from "./state";
+
 class Vue {
   constructor(options) {
     this.init(options);
@@ -17,14 +20,14 @@ class Vue {
 
     this.$options = options;
 
-    // 合并options
+    // 合并options，这样可以使用 this.xxx() 调用 options 的method xxx
     for (let k in options.methods) {
       this[k] = options.methods[k];
     }
 
-    this._initState();
+    this._initState();  // state 里面定义的
 
-    this._compile(el, options);
+    this._compile(el, options); // lifecycle 里面定义的
   }
 }
 
