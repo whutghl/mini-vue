@@ -1,8 +1,7 @@
-
 const onRE = /^v-on:|^@/;
 const modelRE = /^v-model/;
 const textRE = /^v-text/;
-const dirAttrRE = /^v-([^:]+)(?:$|:(.*)$)/
+const dirAttrRE = /^v-([^:]+)(?:$|:(.*)$)/;
 
 /**
  *
@@ -26,21 +25,50 @@ const dirAttrRE = /^v-([^:]+)(?:$|:(.*)$)/
  console.log(match2[2]); // 输出: 123
  */
 
+export const compileDirectives = function (el, attrs) {
+  if (!attrs) {
+    return undefined;
+  }
+  const dirs = [];
 
- export const compileDirectives = function (el, attrs){
+  let i = attrs.length;
 
-    if(!attrs) {
-        return undefined;
+  while (i--) {
+    const attr = attrs[i];
+    const name = attr.name;
+    const value = attr.value;
+
+    let arg = name;
+    if (name.match(dirAttrRE)) {
+      if (onRE.test(name)) {
+        arg = name.replace(onRE, "");
+        pushDir("on", dirOn);
+      } else if (modelRE.test(name)) {
+        arg = name.replace(modelRe, "");
+        pushDir("model", dirModel);
+      } else if (textRE.test(name)) {
+        arg = name.replace(textRE, "");
+        pushDir("text", dirText);
+      }
     }
-    const dirs = [];
 
-    let i = attrs.length;
-
-    while(i--){
-        const attr = attrs[i];
-        const name = attr.name;
-        const value = attr.value;
-
+    function pushDir(dirName, def) {
+      dirs.push({
+        el: el,
+        name: dirName,
+        rawName: name,
+        def,
+        def,
+        arg: arg,
+        value: value,
+        rawValue: value,
+        expression: value,
+      });
     }
+  }
+  if(dirs.length){
+    return makeNodeLinkFn(dirs);
+  }
+};
 
- }
+
