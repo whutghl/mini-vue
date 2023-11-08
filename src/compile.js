@@ -1,3 +1,7 @@
+import dirOn from "./directives/on.js";
+import dirText from "./directives/text.js";
+import dirModel from "./directives/model.js";
+
 const onRE = /^v-on:|^@/;
 const modelRE = /^v-model/;
 const textRE = /^v-text/;
@@ -57,8 +61,7 @@ export const compileDirectives = function (el, attrs) {
         el: el,
         name: dirName,
         rawName: name,
-        def,
-        def,
+        def: def,
         arg: arg,
         value: value,
         rawValue: value,
@@ -66,9 +69,57 @@ export const compileDirectives = function (el, attrs) {
       });
     }
   }
-  if(dirs.length){
+  if (dirs.length) {
     return makeNodeLinkFn(dirs);
   }
 };
 
+function makeNodeLinkFn(directives) {
+  return function nodeLinkFn(vm, el) {
+    // reverse apply because it's sorted low to high
+    let i = directives.length;
+    while (i--) {
+      vm._bindDir(directives[i], el);
+    }
+  };
+}
 
+// 仅用于root element
+
+export const compile = function (el, options) {
+  if (el.hasChildNodes()) {
+    return function (vm, el) {
+      const nodeLink = compileNode(el, options);
+      const childLink = compileNodeList(el.childNodes, options);
+      nodeLink && nodeLink(vm, el);
+      childLink && childLink(vm, el);
+      vm._directives.forEach((v) => {
+        v._bind();
+      });
+    };
+  } else {
+    return function (vm, el) {
+      compileNode(el, options);
+      vm._directives.forEach((v) => {
+        v._bind();
+      });
+    };
+  }
+};
+
+function compileNode(el, options) {
+  return compileDirectives(el, el.attributes);
+}
+
+function compileNodeList(nodeList, options) {
+  const links = [];
+  for (let i = 0, l = nodeList.length; i < l; i++) {
+    const el = nodeList[i];
+    let nodeLink = compileNode(el, options);
+    nodeLink && links.push(nodeLink);
+    if (el.hasChildNodes()) {
+      nodeLink = compileNodeList(el.childNodes, options);
+      nodeLink && links.push(nodeLink);
+    }
+  }
+}
