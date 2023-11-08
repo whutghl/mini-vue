@@ -1,4 +1,5 @@
-import { extend } from "./utils.js";
+import { extend } from './util.js';
+import Watcher from './watcher';
 
 export default function Directive(descriptor, vm, el) {
   this.descriptor = descriptor;
@@ -7,9 +8,9 @@ export default function Directive(descriptor, vm, el) {
   this.expression = descriptor.expression;
 }
 
-Directive.prototype.bind = function () {
-  let def = this.descriptor.def;
-  if (typeof def === "function") {
+Directive.prototype.bind = function() {
+  const def = this.descriptor.def;
+  if (typeof def === 'function') {
     this.update = def;
   } else {
     extend(this, def);
@@ -25,19 +26,19 @@ Directive.prototype.bind = function () {
   if (this.update) {
     const dir = this;
 
-    this._update = function (val, oldVal) {
+    this._update = function(val, oldVal) {
       dir.update(val, oldVal);
     };
   } else {
-    this._update = function () {};
+    this._update = function() {
+    };
   }
 
-  let watcher = (this._watch = new Watcher(
-    this,
-    vm,
+  const watcher = this._watch = new Watcher(
+    this.vm,
     this.expression,
     this._update
-  ));
+  );
 
   // 具有初始内联值的 v-model 需要将值同步回模型而不是在初始化时更新到 DOM。它们会设置 afterBind 钩子函数来指示这一点。
   if (this.update) {

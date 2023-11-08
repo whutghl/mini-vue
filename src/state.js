@@ -1,8 +1,8 @@
-import { observe } from "./observe";
+import { observe } from './observe';
 
-export default function (Vue) {
+export default function(Vue) {
   // 将$data 代理到 this._data 上来
-  Object.defineProperty(Vue.prototype, "$data", {
+  Object.defineProperty(Vue.prototype, '$data', {
     get() {
       return this._data;
     },
@@ -10,25 +10,25 @@ export default function (Vue) {
       if (newData !== this._data) {
         this._setData(newData);
       }
-    },
+    }
   });
 
-  Vue.prototype._initState = function () {
+  Vue.prototype._initState = function() {
     this._initData();
   };
 
-  Vue.prototype._initData = function () {
+  Vue.prototype._initData = function() {
     // this.$options 即 创建实例时的options
-    let dataFn = this.$options.data; // Vue建议是function 而不是 对象形式
+    const dataFn = this.$options.data; // Vue建议是function 而不是 对象形式
 
     // 判断是方法还是对象，都不是则赋空对象{}; 同时给 this._data 定义；
-    let data = (this._data = dataFn
-      ? typeof dataFn == "function"
+    const data = (this._data = dataFn
+      ? typeof dataFn == 'function'
         ? dataFn()
         : dataFn
       : {});
 
-    let keys = Object.keys(data);
+    const keys = Object.keys(data);
 
     let i = keys.length;
     let key;
@@ -43,8 +43,8 @@ export default function (Vue) {
   };
 
   // 代理数据中的可以，代理到 _data 上
-  Vue.prototype._proxy = function (key) {
-    let self = this;
+  Vue.prototype._proxy = function(key) {
+    const self = this;
 
     Object.defineProperty(self, key, {
       configurable: true,
@@ -54,7 +54,7 @@ export default function (Vue) {
       },
       set: function proxySetter(val) {
         self._data[key] = val;
-      },
+      }
     });
   };
 }

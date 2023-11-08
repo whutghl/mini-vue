@@ -16,25 +16,25 @@ Dep.target = null;
 
 // 添加一个指令订阅者
 
-Dep.prototype.addSub = function (sub) {
+Dep.prototype.addSub = function(sub) {
   this.subs.push(sub);
 };
 
 // 删除一个订阅者
 
-Dep.prototype.removeSub = function (sub) {
+Dep.prototype.removeSub = function(sub) {
   this.subs.$remove(sub);
 };
 
 // 把自己当做观察者的依赖项
-Dep.prototype.depend = function () {
+Dep.prototype.depend = function() {
   Dep.target.addDep(this); // Dep.targe 在哪有值的？
 };
 
 // 通知所有订阅者数据值有更新
 
-Deploy.prototype.notify = function () {
-  let subs = this.subs;
+Dep.prototype.notify = function() {
+  const subs = this.subs;
 
   for (let i = 0, l = subs.length; i < l; i++) {
     subs[i].update(); // update 在哪定义的？

@@ -1,6 +1,6 @@
-import dirOn from "./directives/on.js";
-import dirText from "./directives/text.js";
-import dirModel from "./directives/model.js";
+import dirOn from './directives/on.js';
+import dirText from './directives/text.js';
+import dirModel from './directives/model.js';
 
 const onRE = /^v-on:|^@/;
 const modelRE = /^v-model/;
@@ -29,7 +29,7 @@ const dirAttrRE = /^v-([^:]+)(?:$|:(.*)$)/;
  console.log(match2[2]); // 输出: 123
  */
 
-export const compileDirectives = function (el, attrs) {
+export const compileDirectives = function(el, attrs) {
   if (!attrs) {
     return undefined;
   }
@@ -45,14 +45,14 @@ export const compileDirectives = function (el, attrs) {
     let arg = name;
     if (name.match(dirAttrRE)) {
       if (onRE.test(name)) {
-        arg = name.replace(onRE, "");
-        pushDir("on", dirOn);
+        arg = name.replace(onRE, '');
+        pushDir('on', dirOn);
       } else if (modelRE.test(name)) {
-        arg = name.replace(modelRe, "");
-        pushDir("model", dirModel);
+        arg = name.replace(modelRE, '');
+        pushDir('model', dirModel);
       } else if (textRE.test(name)) {
-        arg = name.replace(textRE, "");
-        pushDir("text", dirText);
+        arg = name.replace(textRE, '');
+        pushDir('text', dirText);
       }
     }
 
@@ -65,7 +65,7 @@ export const compileDirectives = function (el, attrs) {
         arg: arg,
         value: value,
         rawValue: value,
-        expression: value,
+        expression: value
       });
     }
   }
@@ -86,9 +86,9 @@ function makeNodeLinkFn(directives) {
 
 // 仅用于root element
 
-export const compile = function (el, options) {
+export const compile = function(el, options) {
   if (el.hasChildNodes()) {
-    return function (vm, el) {
+    return function(vm, el) {
       const nodeLink = compileNode(el, options);
       const childLink = compileNodeList(el.childNodes, options);
       nodeLink && nodeLink(vm, el);
@@ -98,7 +98,7 @@ export const compile = function (el, options) {
       });
     };
   } else {
-    return function (vm, el) {
+    return function(vm, el) {
       compileNode(el, options);
       vm._directives.forEach((v) => {
         v._bind();
