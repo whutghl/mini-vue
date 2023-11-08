@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="./dist/vue.js"></script>
+</head>
+<body>
+  <div id="a">
+    <input v-model="message" />
+    <button v-on:click="increase">Increase</button>
+    <p v-text="message"></p>
+  </div>
+  <script>
+    var cc = new Vue({
+      el: "#a",
+      data: {
+        message: 1
+      },
+      methods: {
+        increase () {
+          this.message += 1
+        }
+      }
+    })
+  </script>
+</body>
+</html>
