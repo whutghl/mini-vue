@@ -1,6 +1,8 @@
 import Dep from './dep'
 
 function Observer(value) {
+  this.vms = []; // 直接预先定义上，方便了解
+
   this.value = value;
   this.dep = new Dep();
   this.walk(value);
@@ -23,9 +25,11 @@ Observer.prototype.convert = function(key, val) {
 // 添加所有者vm，以便在$set/$delete 发生时 我们可以通知所有者vm 代理对应key。只有当对象被观察为实例的root $data 时才有用
 
 Observer.prototype.addVm = function(vm) {
-  (this.vms || (this.vms = [])).push(vm);
+  // (this.vms || (this.vms = [])).push(vm);
+  this.vms.push(vm);
 };
 
+// observe options 里面的 data
 export function observe(value, vm) {
   const ob = new Observer(value);
   ob.addVm(vm);

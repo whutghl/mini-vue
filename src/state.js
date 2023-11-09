@@ -1,7 +1,13 @@
 import { observe } from './observe';
 
+/**
+ * 此处都只是定义，没有在定义的时候调用内部方法；
+ * @param Vue
+ * @returns {*|{}}
+ */
 export default function(Vue) {
   // 将$data 代理到 this._data 上来
+  // 此处只是定义，待调用时才实际调用
   Object.defineProperty(Vue.prototype, '$data', {
     get() {
       return this._data;
@@ -38,7 +44,7 @@ export default function(Vue) {
       this._proxy(key); // 代理 数据中的key
     }
 
-    // observe data; // todo 待实现
+    // observe data;
     observe(data, this);
   };
 
